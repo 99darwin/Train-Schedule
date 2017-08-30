@@ -1,0 +1,8 @@
+.jumbotron {
+	background-image: url(../images/geomeetric.jpg);
+	background-position: cover;
+	background-repeat: repeat;
+	color: white;
+	margin-top: 20px;
+	text-align: center;
+}
