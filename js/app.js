@@ -1,3 +1,6 @@
+// =========================== TRAIN SCHEDULER =========================== 
+
+// --- DATABASE FUNCTIONS ---
 // Initialize Firebase
 var config = {
   apiKey: "AIzaSyBXGpjcqJVy5TkdxSXYhAIKijZZDZqAtZI",
@@ -12,19 +15,23 @@ firebase.initializeApp(config);
 
 var database = firebase.database();
 
+// --- ADD TRAIN FUNCTION --- 
 $('#addTrain').on('click', function(event){
   event.preventDefault();
-
+  
+  // Define variables based on input values
   var name = $('#nameInput').val().trim();
   var destination = $('#destInput').val().trim();
   var firstTime = $('#firstTimeInput').val().trim();
   var frequency = $('#frequencyInput').val().trim();
 
+  // Clear input fields
   $('#nameInput').val('');
   $('#destInput').val('');
   $('#firstTimeInput').val('');
   $('#frequencyInput').val('');
   
+  // Push entries into database fields
   database.ref().push({
     name: name,
     destination: destination,
@@ -34,6 +41,7 @@ $('#addTrain').on('click', function(event){
   });
 });
 
+// --- SCHEDULING FUNCTION ---
 database.ref().on('child_added', function(childSnapshot, prevChildKey){
   // --- Define variables ---
   // Train name
@@ -51,21 +59,16 @@ database.ref().on('child_added', function(childSnapshot, prevChildKey){
   
   // Difference between current time and first arrival time
   var diffTime = moment().diff(moment(firstTimeFormat), 'minutes');
-  console.log(diffTime);
   
   // Time apart
   var apart = diffTime % frequency;
-  console.log(apart);
   
   // Minutes until train arrives
   var tillTrain = frequency - apart;
-  console.log(tillTrain);
 
   // Next arrival
   var arrival = moment().add(tillTrain, 'minutes');
   var arrivalFormat = moment(arrival).format('hh:mm');
-
-  
 
   // Display info in table on page
   $('#trainInfo').append(
@@ -74,5 +77,6 @@ database.ref().on('child_added', function(childSnapshot, prevChildKey){
     '<td id="frequency">' + frequency + 
     '<td id="arrival">' + arrivalFormat + 
     '<td id="away">' + tillTrain);
-
 });
+
+// =========================== NICK SAPONARO =========================== 
